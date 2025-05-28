@@ -589,136 +589,138 @@
                 submitBtn.style.display = 'none';
                 signatureBtn.style.display = 'none';
 
-                // 克隆.header和.content节点
+                // 克隆.header和.content节点，并合并到一个临时div用于截图
                 const header = document.querySelector('.header');
                 const content = document.querySelector('.content');
-                // 找到参与者声明 section
-                const sections = content.querySelectorAll('.section');
-                let declarationIdx = -1;
-                sections.forEach((section, idx) => {
-                    const h3 = section.querySelector('h3');
-                    if (h3 && h3.textContent.trim() === '参与者声明') {
-                        declarationIdx = idx;
-                    }
-                });
-                // 第一页内容：header + content前半部分
-                const pdfContent1 = document.createElement('div');
-                pdfContent1.style.background = 'white';
-                pdfContent1.style.padding = '40px';
-                pdfContent1.style.fontFamily = "'Microsoft YaHei', Arial, sans-serif";
-                pdfContent1.style.lineHeight = '1.6';
-                pdfContent1.style.color = '#333';
-                pdfContent1.style.maxWidth = '800px';
-                pdfContent1.style.margin = '0 auto';
-                pdfContent1.appendChild(header.cloneNode(true));
-                const contentClone1 = document.createElement('div');
-                contentClone1.className = 'content';
-                for (let i = 0; i < declarationIdx; i++) {
-                    contentClone1.appendChild(sections[i].cloneNode(true));
-                }
-                pdfContent1.appendChild(contentClone1);
-                // 第二页内容：header + 参与者声明及其后内容
-                const pdfContent2 = document.createElement('div');
-                pdfContent2.style.background = 'white';
-                pdfContent2.style.padding = '40px';
-                pdfContent2.style.fontFamily = "'Microsoft YaHei', Arial, sans-serif";
-                pdfContent2.style.lineHeight = '1.6';
-                pdfContent2.style.color = '#333';
-                pdfContent2.style.maxWidth = '800px';
-                pdfContent2.style.margin = '0 auto';
-                pdfContent2.appendChild(header.cloneNode(true));
-                const contentClone2 = document.createElement('div');
-                contentClone2.className = 'content';
-                for (let i = declarationIdx; i < sections.length; i++) {
-                    contentClone2.appendChild(sections[i].cloneNode(true));
-                }
-                pdfContent2.appendChild(contentClone2);
-                // 替换表单内容为只读（第二页）
+                const tempDiv = document.createElement('div');
+                tempDiv.style.background = 'white';
+                tempDiv.style.padding = '40px';
+                tempDiv.style.fontFamily = "'Microsoft YaHei', Arial, sans-serif";
+                tempDiv.style.lineHeight = '1.6';
+                tempDiv.style.color = '#333';
+                tempDiv.style.maxWidth = '800px';
+                tempDiv.style.margin = '0 auto';
+                tempDiv.style.position = 'fixed'; // 设为fixed避免影响布局
+                tempDiv.style.left = '-9999px';
+                tempDiv.style.top = '0';
+                tempDiv.style.zIndex = '-1';
+
+                // 克隆header和content到临时div
+                tempDiv.appendChild(header.cloneNode(true));
+                const contentClone = content.cloneNode(true);
+
+                // 替换表单内容为只读
                 // 姓名
-                const nameInput = pdfContent2.querySelector('#participant-name');
+                const nameInput = contentClone.querySelector('#participant-name');
                 if (nameInput) {
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = formData.name;
-                    nameSpan.style = 'border-bottom: 2px solid #333; padding-bottom: 5px; margin-left: 10px; font-size: 18px;';
+                    // 复制一些基本样式以保持一致性
+                    nameSpan.style.borderBottom = '2px solid #333';
+                    nameSpan.style.paddingBottom = '5px';
+                    nameSpan.style.marginLeft = '10px';
+                    nameSpan.style.fontSize = '18px';
                     nameInput.parentNode.replaceChild(nameSpan, nameInput);
                 }
                 // 日期
-                const dateInput = pdfContent2.querySelector('#consent-date');
+                const dateInput = contentClone.querySelector('#consent-date');
                 if (dateInput) {
                     const dateSpan = document.createElement('span');
                     dateSpan.textContent = formData.date;
-                    dateSpan.style = 'border-bottom: 2px solid #333; padding-bottom: 5px; margin-left: 10px; font-size: 18px;';
+                     // 复制一些基本样式以保持一致性
+                    dateSpan.style.borderBottom = '2px solid #333';
+                    dateSpan.style.paddingBottom = '5px';
+                    dateSpan.style.marginLeft = '10px';
+                    dateSpan.style.fontSize = '18px';
                     dateInput.parentNode.replaceChild(dateSpan, dateInput);
                 }
                 // 签名图片
-                const signatureImg = pdfContent2.querySelector('#signature-image');
-                if (signatureImg) {
+                const signatureImg = contentClone.querySelector('#signature-image');
+                const signatureDisplay = contentClone.querySelector('.signature-display');
+                const signatureBtnClone = contentClone.querySelector('.signature-btn');
+
+                if (signatureImg && signatureDisplay && signatureBtnClone) {
+                     // 隐藏按钮和提示文本
+                    signatureBtnClone.style.display = 'none';
+                    const sigSavedText = contentClone.querySelector('#signature-saved-text');
+                    if(sigSavedText) sigSavedText.style.display = 'none';
+                    
+                    // 显示签名图片容器
+                    signatureDisplay.style.display = 'block';
+                    signatureDisplay.style.textAlign = 'center'; // 居中
+                    
+                    // 设置图片源并调整样式
                     signatureImg.src = formData.signature;
-                    signatureImg.style.display = 'block';
+                    signatureImg.style.maxWidth = '250px';
+                    signatureImg.style.maxHeight = '100px';
+                    signatureImg.style.border = '1px solid #ddd';
+                    signatureImg.style.padding = '10px';
+                    signatureImg.style.borderRadius = '5px';
+                    signatureImg.style.display = 'inline-block'; // 使图片居中
+
+                } else if (signatureBtnClone) {
+                     // 如果没有签名图片（用户未签名），隐藏签名相关元素
+                    signatureBtnClone.style.display = 'none';
+                     if(signatureDisplay) signatureDisplay.style.display = 'none';
                 }
-                // 隐藏签名按钮和"签名已保存"提示
-                const sigBtn = pdfContent2.querySelector('.signature-btn');
-                if (sigBtn) sigBtn.style.display = 'none';
-                const sigSaved = pdfContent2.querySelector('#signature-saved-text');
-                if (sigSaved) sigSaved.style.display = 'none';
+
                 // 隐藏提交按钮
-                const submitBtnPdf = pdfContent2.querySelector('.submit-btn');
+                const submitBtnPdf = contentClone.querySelector('.submit-btn');
                 if (submitBtnPdf) submitBtnPdf.style.display = 'none';
+                
+                tempDiv.appendChild(contentClone); // 将处理后的contentClone添加到临时div
+                document.body.appendChild(tempDiv); // 将临时div添加到body用于截图
 
-                // 创建临时div用于截图
-                const tempDiv1 = document.createElement('div');
-                tempDiv1.style.background = 'white';
-                tempDiv1.style.position = 'fixed';
-                tempDiv1.style.left = '-9999px';
-                tempDiv1.style.top = '0';
-                tempDiv1.style.zIndex = '-1';
-                tempDiv1.appendChild(pdfContent1);
-                document.body.appendChild(tempDiv1);
-                const tempDiv2 = document.createElement('div');
-                tempDiv2.style.background = 'white';
-                tempDiv2.style.position = 'fixed';
-                tempDiv2.style.left = '-9999px';
-                tempDiv2.style.top = '0';
-                tempDiv2.style.zIndex = '-1';
-                tempDiv2.appendChild(pdfContent2);
-                document.body.appendChild(tempDiv2);
 
-                // 截图第一页
-                const canvas1 = await html2canvas(tempDiv1, {
+                // 截图生成PDF
+                const canvas = await html2canvas(tempDiv, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#ffffff'
                 });
-                // 截图第二页
-                const canvas2 = await html2canvas(tempDiv2, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff'
-                });
-                document.body.removeChild(tempDiv1);
-                document.body.removeChild(tempDiv2);
+                document.body.removeChild(tempDiv);
+
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                // 第一页
-                const imgData1 = canvas1.toDataURL('image/png');
+                const imgData = canvas.toDataURL('image/png');
                 const imgWidth = 210;
-                const imgHeight1 = canvas1.height * imgWidth / canvas1.width;
-                pdf.addImage(imgData1, 'PNG', 0, 0, imgWidth, imgHeight1);
-                // 第二页
-                pdf.addPage();
-                const imgData2 = canvas2.toDataURL('image/png');
-                const imgHeight2 = canvas2.height * imgWidth / canvas2.width;
-                pdf.addImage(imgData2, 'PNG', 0, 0, imgWidth, imgHeight2);
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                // 如果内容高度超过一页，需要分页
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= 297; // A4高度 (mm)
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= 297;
+                }
+
+                // 生成文件名
                 const fileName = `知情同意书_${formData.name}_${formData.date}.pdf`;
+
+                // 保存PDF
                 pdf.save(fileName);
+
+                // 恢复按钮显示
                 submitBtn.style.display = 'block';
                 signatureBtn.style.display = 'block';
+
                 showMessage('PDF保存成功！', 'success');
+
             } catch (error) {
                 console.error('PDF生成失败:', error);
                 showMessage('PDF生成失败，请重试！', 'error');
-                document.querySelector('.submit-btn').style.display = 'block';
-                document.querySelector('.signature-btn').style.display = 'block';
+
+                // 恢复按钮显示
+                const submitBtn = document.querySelector('.submit-btn');
+                const signatureBtn = document.querySelector('.signature-btn');
+                if (submitBtn) submitBtn.style.display = 'block';
+                if (signatureBtn) signatureBtn.style.display = 'block';
             }
         }
 
