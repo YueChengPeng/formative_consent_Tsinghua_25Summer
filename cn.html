@@ -371,12 +371,12 @@
 
             <div class="section">
                 <h3>参与研究的收益</h3>
-                <p>作为感谢，我们将在访谈结束后提供100元作为访谈费用。如研究团队发现参与者不符合研究参与要求或提供了虚假信息，研究团队保留暂停发放补偿的权利。参加研究的人员须年满18周岁。</p>
+                <p>作为感谢，我们将在访谈结束后提供200元作为访谈费用。如研究团队发现参与者不符合研究参与要求或提供了虚假信息，研究团队保留暂停发放补偿的权利。参加研究的人员须年满18周岁。</p>
             </div>
 
             <div class="section">
                 <h3>研究信息的保密性</h3>
-                <p>您的所有个人信息和访谈数据将严格保密，仅用于本研究。在后续的出版物中我们会对所有个人信息进行脱敏以及匿名处理。只有研究团队成员可访问访谈记录。相关政府或大学部门可能会对本研究进行合规审查，但审查人员同样负有保密义务。</p>
+                <p><strong class="highlight">您的所有个人信息和访谈数据将严格保密，仅用于本研究。在后续的出版物中我们会对所有个人信息进行脱敏以及匿名处理。只有研究团队成员可访问访谈记录。</strong>相关政府或大学部门可能会对本研究进行合规审查，但审查人员同样负有保密义务。</p>
                 <strong class="highlight">此外，本研究的具体内容、研究细节以及研究过程中产生的所有材料，您也应严格保密，不得向第三方透露。</strong>
             </div>
 
@@ -401,6 +401,18 @@
                     <div class="form-group">
                         <label for="consent-date">签字日期：</label>
                         <input type="date" id="consent-date" name="consent-date" required>
+                    </div>
+    
+                    <div class="form-group">
+                        <label id="phone-label">电话号：</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="phone-area" name="phone-area" placeholder="区号" required style="width: 80px;">
+                            <span>-</span>
+                            <input type="text" id="phone-main" name="phone-main" placeholder="手机号码" required style="flex: 1;">
+                        </div>
+                        <div style="font-size: 0.95em; color: #666; margin-top: 5px;">
+                            电话号仅用于报销申请流程所需的信息，不会外传或公开；研究人员会对其严格保密处理。
+                        </div>
                     </div>
     
                     <div class="form-group">
@@ -558,6 +570,8 @@
         function submitForm() {
             const name = document.getElementById('participant-name').value;
             const date = document.getElementById('consent-date').value;
+            const phoneArea = document.getElementById('phone-area').value;
+            const phoneMain = document.getElementById('phone-main').value;
             
             if (!name.trim()) {
                 alert('请填写您的姓名！');
@@ -569,12 +583,17 @@
                 return;
             }
             
+            if (!phoneArea.trim() || !phoneMain.trim()) {
+                alert('请填写您的电话号（区号和主要号码）！');
+                return;
+            }
+            
             if (!signatureData) {
                 alert('请进行电子签名！');
                 return;
             }
             
-            return { name, date, signature: signatureData };
+            return { name, date, phone: `(${phoneArea}) ${phoneMain}`, signature: signatureData };
         }
 
         async function saveToPDF() {
@@ -633,6 +652,18 @@
                     dateSpan.style.marginLeft = '10px';
                     dateSpan.style.fontSize = '18px';
                     dateInput.parentNode.replaceChild(dateSpan, dateInput);
+                }
+                // 电话号
+                const phoneAreaInput = contentClone.querySelector('#phone-area');
+                const phoneMainInput = contentClone.querySelector('#phone-main');
+                if (phoneAreaInput && phoneMainInput) {
+                    const phoneSpan = document.createElement('span');
+                    phoneSpan.textContent = `(${formData.phone.split(')')[0].replace('(','')}) ${formData.phone.split(')')[1].trim()}`;
+                    phoneSpan.style.borderBottom = '2px solid #333';
+                    phoneSpan.style.paddingBottom = '5px';
+                    phoneSpan.style.marginLeft = '10px';
+                    phoneSpan.style.fontSize = '18px';
+                    phoneAreaInput.parentNode.parentNode.replaceChild(phoneSpan, phoneAreaInput.parentNode);
                 }
                 // 签名图片
                 const signatureImg = contentClone.querySelector('#signature-image');

@@ -394,6 +394,17 @@
                             <input type="date" id="consent-date" name="consent-date" required>
                         </div>
                         <div class="form-group">
+                            <label id="phone-label">Phone Number:</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="phone-area" name="phone-area" placeholder="Area Code" required style="width: 80px;">
+                                <span>-</span>
+                                <input type="text" id="phone-main" name="phone-main" placeholder="Main Number" required style="flex: 1;">
+                            </div>
+                            <div style="font-size: 0.95em; color: #666; margin-top: 5px;">
+                                The phone number is only used for reimbursement application purposes and will not be disclosed or shared. The research team will keep it strictly confidential.
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label id="signature-label">Signature:</label>
                             <div class="signature-container">
                                 <button type="button" class="signature-btn" onclick="openSignatureModal()" id="signature-btn-text">
@@ -543,23 +554,25 @@
         function submitForm() {
             const name = document.getElementById('participant-name').value;
             const date = document.getElementById('consent-date').value;
-            
+            const phoneArea = document.getElementById('phone-area').value;
+            const phoneMain = document.getElementById('phone-main').value;
             if (!name.trim()) {
-                alert('请填写您的姓名！');
+                alert('Please enter your name!');
                 return;
             }
-            
             if (!date) {
-                alert('请选择日期！');
+                alert('Please select a date!');
                 return;
             }
-            
+            if (!phoneArea.trim() || !phoneMain.trim()) {
+                alert('Please enter your phone number (area code and main number)!');
+                return;
+            }
             if (!signatureData) {
-                alert('请进行电子签名！');
+                alert('Please provide your electronic signature!');
                 return;
             }
-            
-            return { name, date, signature: signatureData };
+            return { name, date, phone: `(${phoneArea}) ${phoneMain}`, signature: signatureData };
         }
 
         async function saveToPDF() {
@@ -616,6 +629,18 @@
                     dateSpan.style.marginLeft = '10px';
                     dateSpan.style.fontSize = '18px';
                     dateInput.parentNode.replaceChild(dateSpan, dateInput);
+                }
+                // Phone
+                const phoneAreaInput = contentClone.querySelector('#phone-area');
+                const phoneMainInput = contentClone.querySelector('#phone-main');
+                if (phoneAreaInput && phoneMainInput) {
+                    const phoneSpan = document.createElement('span');
+                    phoneSpan.textContent = `(${formData.phone.split(')')[0].replace('(','')}) ${formData.phone.split(')')[1].trim()}`;
+                    phoneSpan.style.borderBottom = '2px solid #333';
+                    phoneSpan.style.paddingBottom = '5px';
+                    phoneSpan.style.marginLeft = '10px';
+                    phoneSpan.style.fontSize = '18px';
+                    phoneAreaInput.parentNode.parentNode.replaceChild(phoneSpan, phoneAreaInput.parentNode);
                 }
                 // Signature Image
                 const signatureImg = contentClone.querySelector('#signature-image');
