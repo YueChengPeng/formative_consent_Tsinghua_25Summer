@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清华大学研究知情同意书</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4b0082 0%, #8b0000 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #f8f9ff, #e8ecff);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h3 {
+            color: #4b0082;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3::before {
+            content: '●';
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7, #fab1a0);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .form-section {
+            background: linear-gradient(145deg, #ffffff, #f1f3ff);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #667eea;
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #4b0082;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .signature-container {
+            text-align: center;
+        }
+
+        .signature-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .signature-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .signature-display {
+            margin-top: 15px;
+            padding: 15px;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            min-height: 60px;
+            background: rgba(102, 126, 234, 0.05);
+            display: none;
+        }
+
+        .signature-display.active {
+            display: block;
+        }
+
+        .signature-display img {
+            max-width: 200px;
+            max-height: 80px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.6);
+        }
+
+        /* 签名弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: modalSlideIn 0.5s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        #signature-canvas {
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            cursor: crosshair;
+            background: white;
+        }
+
+        .canvas-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .canvas-btn {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn {
+            background: #e17055;
+            color: white;
+        }
+
+        .save-btn {
+            background: #00b894;
+            color: white;
+        }
+
+        .canvas-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>清华大学研究知情同意书</h1>
+            <h2>创客社区对人机交互个人制造学术成果的使用</h2>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h3>研究团队</h3>
+                <ul>
+                    <li><strong>研究员:</strong> 彭悦诚, 华盛顿大学HCDE博士生 清华大学未来实验室研究员<br>
+                        电子邮箱：ychpeng@uw.edu</li>
+                    <li><strong>导师:</strong> 米海鹏, 教授 清华大学未来实验室</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>研究目的</h3>
+                <p>本研究旨在探讨一种智能平台如何更好地帮助创客发现、理解和应用人机交互个人制造领域的学术研究成果。通过评估本次原型系统，我们希望改进其设计与功能，使其更好地满足创客的需求。
+                </p>
+            </div>
+
+            <div class="section">
+                <h3>研究过程</h3>
+                <p>若您同意参与，您将使用本研究的原型平台并完成一个简短任务（如检索、浏览或查看论文）。之后，我们将进行一次访谈，以收集您对平台可用性、有效性以及改进方向的反馈。
+                    <span class="highlight">整个环节（平台使用与访谈）将被录音，以便研究人员准确分析您的反馈。</span>
+                </p>
+            </div>
+
+            <div class="section">
+                <h3>可能存在的风险或不适</h3>
+                <p>访谈中可能涉及到您个人制造的经历、对学术研究的理解与应用过程，以及您在复刻过程中遇到的困难或挫折。如您在访谈过程中感到不适，可提出跳过问题或终止访谈。</p>
+            </div>
+
+            <div class="section">
+                <h3>参与研究的收益</h3>
+                <p>作为感谢，我们将在访谈结束后提供100元作为访谈费用。如研究团队发现参与者不符合研究参与要求或提供了虚假信息，研究团队保留暂停发放补偿的权利。参加研究的人员须年满18周岁。</p>
+            </div>
+
+            <div class="section">
+                <h3>研究信息的保密性</h3>
+                <p><strong
+                        class="highlight">您的所有个人信息和访谈数据将严格保密，仅用于本研究。在后续的出版物中我们会对所有个人信息进行脱敏以及匿名处理。只有研究团队成员可访问访谈记录。</strong>相关政府或大学部门可能会对本研究进行合规审查，但审查人员同样负有保密义务。
+                </p>
+                <strong class="highlight">此外，本研究的具体内容、研究细节以及研究过程中产生的所有材料，您也应严格保密，不得向第三方透露。</strong>
+            </div>
+
+            <!-- <div class="section">
+                <h3>研究相关损害声明</h3>
+                <p>华盛顿大学一般不会为因研究而造成的损害提供经济赔偿，除非法律或大学的特殊项目允许。但是，若由于研究团队的疏忽造成损害，您有权依法追究相应责任。本同意书不会让您放弃任何索赔权利。</p>
+            </div> -->
+
+            <div class="section">
+                <h3>参与者声明</h3>
+                <p>本研究内容已向我解释清楚。我自愿参与本研究并已有机会提出问题。<strong>我不会向任何第三方透露有关此次研究的内容与细节。</strong>如果我在研究中受到任何损害，或日后对本研究有疑问，我可通过本同意书上的研究人员联系方式进行咨询。
+                </p>
+                <!-- <p>若对我作为研究参与者的权利有疑问，可联系华盛顿大学人类研究受试者部门（Human Subjects Division）：(206) 543-0098。</p> -->
+                <p>我同意研究人员按上述说明使用我的访谈数据，并将获得一份此知情同意书副本。</p>
+                <div class="form-section">
+                    <h3 style="text-align: center; margin-bottom: 30px; color: #4b0082;">参与者信息</h3>
+
+                    <div class="form-group">
+                        <label for="participant-name">被试姓名：</label>
+                        <input type="text" id="participant-name" name="participant-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="consent-date">签字日期：</label>
+                        <input type="date" id="consent-date" name="consent-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="phone-label">电话号：</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="phone-area" name="phone-area" placeholder="区号" required
+                                style="width: 80px;">
+                            <span>-</span>
+                            <input type="text" id="phone-main" name="phone-main" placeholder="手机号码" required
+                                style="flex: 1;">
+                        </div>
+                        <div style="font-size: 0.95em; color: #666; margin-top: 5px;">
+                            电话号仅用于报销申请流程所需的信息，不会外传或公开；研究人员会对其严格保密处理。
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>电子签名：</label>
+                        <div class="signature-container">
+                            <button type="button" class="signature-btn" onclick="openSignatureModal()">
+                                点击进行电子签名
+                            </button>
+                            <div class="signature-display" id="signature-display">
+                                <p>签名已保存</p>
+                                <img id="signature-image" src="" alt="电子签名">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" onclick="saveToPDF()">
+                        保存知情同意书
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- 签名弹窗 -->
+    <div id="signature-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSignatureModal()">&times;</span>
+            <h2 style="text-align: center; color: #4b0082; margin-bottom: 20px;">电子签名</h2>
+            <p style="text-align: center; margin-bottom: 20px;">请在下方区域内签署您的姓名：</p>
+
+            <canvas id="signature-canvas" width="500" height="200"></canvas>
+
+            <div class="canvas-controls">
+                <button class="canvas-btn clear-btn" onclick="clearSignature()">清除签名</button>
+                <button class="canvas-btn save-btn" onclick="saveSignature()">保存签名</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // 签名画布功能
+        let canvas, ctx;
+        let isDrawing = false;
+        let signatureData = null;
+
+        function initCanvas() {
+            canvas = document.getElementById('signature-canvas');
+            ctx = canvas.getContext('2d');
+
+            // 设置画笔样式
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+
+            // 鼠标事件
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // 触摸事件（移动端支持）
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            if (e.type === 'touchstart') {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            } else if (e.type === 'touchmove' && isDrawing) {
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveSignature() {
+            // 检查是否有签名内容
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            let hasContent = false;
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] !== 0) { // 检查alpha通道
+                    hasContent = true;
+                    break;
+                }
+            }
+
+            if (!hasContent) {
+                alert('请先进行签名！');
+                return;
+            }
+
+            // 保存签名数据
+            signatureData = canvas.toDataURL();
+
+            // 显示签名预览
+            const signatureDisplay = document.getElementById('signature-display');
+            const signatureImage = document.getElementById('signature-image');
+            signatureImage.src = signatureData;
+            signatureDisplay.classList.add('active');
+
+            // 关闭弹窗
+            closeSignatureModal();
+
+            // 显示成功消息
+            showMessage('签名保存成功！', 'success');
+        }
+
+        function openSignatureModal() {
+            document.getElementById('signature-modal').style.display = 'block';
+            // 延迟初始化画布，确保DOM已渲染
+            setTimeout(initCanvas, 100);
+        }
+
+        function closeSignatureModal() {
+            document.getElementById('signature-modal').style.display = 'none';
+        }
+
+        function submitForm() {
+            const name = document.getElementById('participant-name').value;
+            const date = document.getElementById('consent-date').value;
+            const phoneArea = document.getElementById('phone-area').value;
+            const phoneMain = document.getElementById('phone-main').value;
+
+            if (!name.trim()) {
+                alert('请填写您的姓名！');
+                return;
+            }
+
+            if (!date) {
+                alert('请选择日期！');
+                return;
+            }
+
+            if (!phoneArea.trim() || !phoneMain.trim()) {
+                alert('请填写您的电话号（区号和主要号码）！');
+                return;
+            }
+
+            if (!signatureData) {
+                alert('请进行电子签名！');
+                return;
+            }
+
+            return { name, date, phone: `(${phoneArea}) ${phoneMain}`, signature: signatureData };
+        }
+
+        async function saveToPDF() {
+            // 首先验证表单
+            const formData = submitForm();
+            if (!formData) return;
+            try {
+                showMessage('正在生成PDF，请稍候...', 'info');
+                // 隐藏按钮，避免截图时出现
+                const submitBtn = document.querySelector('.submit-btn');
+                const signatureBtn = document.querySelector('.signature-btn');
+                submitBtn.style.display = 'none';
+                signatureBtn.style.display = 'none';
+
+                // 克隆.header和.content节点，并合并到一个临时div用于截图
+                const header = document.querySelector('.header');
+                const content = document.querySelector('.content');
+                const tempDiv = document.createElement('div');
+                tempDiv.style.background = 'white';
+                tempDiv.style.padding = '40px';
+                tempDiv.style.fontFamily = "'Microsoft YaHei', Arial, sans-serif";
+                tempDiv.style.lineHeight = '1.6';
+                tempDiv.style.color = '#333';
+                tempDiv.style.maxWidth = '800px';
+                tempDiv.style.margin = '0 auto';
+                tempDiv.style.position = 'fixed'; // 设为fixed避免影响布局
+                tempDiv.style.left = '-9999px';
+                tempDiv.style.top = '0';
+                tempDiv.style.zIndex = '-1';
+
+                // 克隆header和content到临时div
+                tempDiv.appendChild(header.cloneNode(true));
+                const contentClone = content.cloneNode(true);
+
+                // 替换表单内容为只读
+                // 姓名
+                const nameInput = contentClone.querySelector('#participant-name');
+                if (nameInput) {
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = formData.name;
+                    // 复制一些基本样式以保持一致性
+                    nameSpan.style.borderBottom = '2px solid #333';
+                    nameSpan.style.paddingBottom = '5px';
+                    nameSpan.style.marginLeft = '10px';
+                    nameSpan.style.fontSize = '18px';
+                    nameInput.parentNode.replaceChild(nameSpan, nameInput);
+                }
+                // 日期
+                const dateInput = contentClone.querySelector('#consent-date');
+                if (dateInput) {
+                    const dateSpan = document.createElement('span');
+                    dateSpan.textContent = formData.date;
+                    // 复制一些基本样式以保持一致性
+                    dateSpan.style.borderBottom = '2px solid #333';
+                    dateSpan.style.paddingBottom = '5px';
+                    dateSpan.style.marginLeft = '10px';
+                    dateSpan.style.fontSize = '18px';
+                    dateInput.parentNode.replaceChild(dateSpan, dateInput);
+                }
+                // 电话号
+                const phoneAreaInput = contentClone.querySelector('#phone-area');
+                const phoneMainInput = contentClone.querySelector('#phone-main');
+                if (phoneAreaInput && phoneMainInput) {
+                    const phoneSpan = document.createElement('span');
+                    phoneSpan.textContent = `(${formData.phone.split(')')[0].replace('(', '')}) ${formData.phone.split(')')[1].trim()}`;
+                    phoneSpan.style.borderBottom = '2px solid #333';
+                    phoneSpan.style.paddingBottom = '5px';
+                    phoneSpan.style.marginLeft = '10px';
+                    phoneSpan.style.fontSize = '18px';
+                    phoneAreaInput.parentNode.parentNode.replaceChild(phoneSpan, phoneAreaInput.parentNode);
+                }
+                // 签名图片
+                const signatureImg = contentClone.querySelector('#signature-image');
+                const signatureDisplay = contentClone.querySelector('.signature-display');
+                const signatureBtnClone = contentClone.querySelector('.signature-btn');
+
+                if (signatureImg && signatureDisplay && signatureBtnClone) {
+                    // 隐藏按钮和提示文本
+                    signatureBtnClone.style.display = 'none';
+                    const sigSavedText = contentClone.querySelector('#signature-saved-text');
+                    if (sigSavedText) sigSavedText.style.display = 'none';
+
+                    // 显示签名图片容器
+                    signatureDisplay.style.display = 'block';
+                    signatureDisplay.style.textAlign = 'center'; // 居中
+
+                    // 设置图片源并调整样式
+                    signatureImg.src = formData.signature;
+                    signatureImg.style.maxWidth = '250px';
+                    signatureImg.style.maxHeight = '100px';
+                    signatureImg.style.border = '1px solid #ddd';
+                    signatureImg.style.padding = '10px';
+                    signatureImg.style.borderRadius = '5px';
+                    signatureImg.style.display = 'inline-block'; // 使图片居中
+
+                } else if (signatureBtnClone) {
+                    // 如果没有签名图片（用户未签名），隐藏签名相关元素
+                    signatureBtnClone.style.display = 'none';
+                    if (signatureDisplay) signatureDisplay.style.display = 'none';
+                }
+
+                // 隐藏提交按钮
+                const submitBtnPdf = contentClone.querySelector('.submit-btn');
+                if (submitBtnPdf) submitBtnPdf.style.display = 'none';
+
+                tempDiv.appendChild(contentClone); // 将处理后的contentClone添加到临时div
+                document.body.appendChild(tempDiv); // 将临时div添加到body用于截图
+
+
+                // 截图生成PDF
+                const canvas = await html2canvas(tempDiv, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                });
+                document.body.removeChild(tempDiv);
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                // 如果内容高度超过一页，需要分页
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= 297; // A4高度 (mm)
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= 297;
+                }
+
+                // 生成文件名
+                const fileName = `知情同意书_${formData.name}_${formData.date}.pdf`;
+
+                // 保存PDF
+                pdf.save(fileName);
+
+                // 恢复按钮显示
+                submitBtn.style.display = 'block';
+                signatureBtn.style.display = 'block';
+
+                showMessage('PDF保存成功！', 'success');
+
+            } catch (error) {
+                console.error('PDF生成失败:', error);
+                showMessage('PDF生成失败，请重试！', 'error');
+
+                // 恢复按钮显示
+                const submitBtn = document.querySelector('.submit-btn');
+                const signatureBtn = document.querySelector('.signature-btn');
+                if (submitBtn) submitBtn.style.display = 'block';
+                if (signatureBtn) signatureBtn.style.display = 'block';
+            }
+        }
+
+        function showMessage(message, type) {
+            // 创建消息提示
+            const messageDiv = document.createElement('div');
+            let bgColor;
+            switch (type) {
+                case 'success':
+                    bgColor = 'background: linear-gradient(135deg, #00b894, #00cec9);';
+                    break;
+                case 'error':
+                    bgColor = 'background: linear-gradient(135deg, #e17055, #d63031);';
+                    break;
+                case 'info':
+                    bgColor = 'background: linear-gradient(135deg, #667eea, #764ba2);';
+                    break;
+                default:
+                    bgColor = 'background: linear-gradient(135deg, #667eea, #764ba2);';
+            }
+
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                animation: slideInRight 0.5s ease-out;
+                ${bgColor}
+                max-width: 300px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            `;
+            messageDiv.textContent = message;
+
+            document.body.appendChild(messageDiv);
+
+            // 3秒后自动移除（info类型显示更久）
+            const duration = type === 'info' ? 5000 : 3000;
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => {
+                    if (document.body.contains(messageDiv)) {
+                        document.body.removeChild(messageDiv);
+                    }
+                }, 500);
+            }, duration);
+        }
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 设置默认日期为今天
+        document.getElementById('consent-date').valueAsDate = new Date();
+
+        // 点击弹窗外部关闭弹窗
+        window.onclick = function (event) {
+            const modal = document.getElementById('signature-modal');
+            if (event.target === modal) {
+                closeSignatureModal();
+            }
+        }
+    </script>
+</body>
+
+</html>
